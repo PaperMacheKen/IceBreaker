@@ -30,5 +30,49 @@ fun GistOfTheGameScreen() {
             fontSize = 16.sp,
             modifier = Modifier.padding(bottom = 12.dp)
         )
+
+        Text(
+            text = "What happens in the icebreaker game: ",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        Text(
+            text = "All implements must be used lightly as there is no negotiation or warmup.",
+            fontSize = 16.sp,
+            modifier = Modifier.padding(bottom = 12.dp)
+        )
+
+        Text(
+            text = "A bottom’s name will be randomly selected and called to come forward.\nA Tops name is randomly selected\nThe bottom decides if they are comfortable playing with the Top.\nIf the bottom does not consent, another Top will be randomly selected.",
+            fontSize = 16.sp,
+            modifier = Modifier.padding(bottom = 12.dp)
+        )
+
+        Text(
+            text = "The Top is then called to come forward.\nThe bottom picks out a spanking implement.\nTypically the range is from 5-10 light strokes, the bottom can choose the double the strokes if desired.",
+            fontSize = 16.sp,
+            modifier = Modifier.padding(bottom = 12.dp)
+        )
+
+        Text(
+            text = "The ratio of Tops vs Bottoms can vary, so it may take longer to get thru all the names of one category while the other category is called a second time.",
+            fontSize = 16.sp,
+            modifier = Modifier.padding(bottom = 12.dp)
+        )
+
+        Text(
+            text = "Types of toys: ",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        Text(
+            text = "paddles (of many variations), crops, canes & other implements. Hands are also acceptable. ",
+            fontSize = 16.sp,
+            modifier = Modifier.padding(bottom = 12.dp)
+        )
     }
 }
