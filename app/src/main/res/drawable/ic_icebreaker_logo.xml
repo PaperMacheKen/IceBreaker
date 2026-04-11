@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    About-screen logo placeholder.
+    To use your actual Icebreaker logo:
+      1. Export it as ic_icebreaker_logo.png (512×512 px recommended).
+      2. Place it in  app/src/main/res/drawable/
+         and delete (or rename) this XML file.
+      3. Rebuild the project – no code changes needed.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Sky-blue rounded-square background -->
+    <path
+        android:fillColor="#42A5F5"
+        android:pathData="
+          M24,0 L176,0
+          Q200,0 200,24
+          L200,176
+          Q200,200 176,200
+          L24,200
+          Q0,200 0,176
+          L0,24
+          Q0,0 24,0 Z" />
+
+    <!-- Deep-blue inner disc -->
+    <path
+        android:fillColor="#1976D2"
+        android:pathData="
+          M100,28
+          m-66,0
+          a66,66 0 1,0 132,0
+          a66,66 0 1,0 -132,0 Z" />
+
+    <!-- White glove / hand -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="
+          M100,42
+          L88,58 L80,58 L80,74
+          L72,74 L72,88
+          L80,88 L80,98
+          L120,98 L120,88
+          L128,88 L128,74
+          L120,74 L120,58
+          L112,58 Z" />
+
+    <!-- Left ice cube -->
+    <path
+        android:fillColor="#E3F2FD"
+        android:pathData="
+          M60,108 L80,100 L100,112
+          L100,136 L80,144 L60,132 Z" />
+
+    <!-- Right ice cube -->
+    <path
+        android:fillColor="#BBDEFB"
+        android:pathData="
+          M100,112 L120,100 L140,108
+          L140,132 L120,144 L100,136 Z" />
+
+    <!-- Gold star – top-left -->
+    <path
+        android:fillColor="#FFD54F"
+        android:pathData="
+          M36,38 L39,48 L49,48
+          L41,55 L44,65
+          L36,58 L28,65
+          L31,55 L23,48
+          L33,48 Z" />
+
+    <!-- Gold star – top-right -->
+    <path
+        android:fillColor="#FFD54F"
+        android:pathData="
+          M164,38 L167,48 L177,48
+          L169,55 L172,65
+          L164,58 L156,65
+          L159,55 L151,48
+          L161,48 Z" />
+
+    <!-- Small heart – bottom-left -->
+    <path
+        android:fillColor="#EF5350"
+        android:pathData="
+          M42,152
+          Q42,144 50,144
+          Q54,144 56,148
+          Q58,144 62,144
+          Q70,144 70,152
+          Q70,160 56,168 Z" />
+
+    <!-- Thumbs-up – bottom-right -->
+    <path
+        android:fillColor="#FFD54F"
+        android:pathData="
+          M138,166 L138,152 L148,140 L152,142
+          L148,152 L166,152 L168,158 L164,166
+          L162,168 L138,168 Z" />
+
+</vector>

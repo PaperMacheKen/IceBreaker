@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    App icon foreground: simplified Icebreaker motif.
+    The safe zone for adaptive icons is the inner 72dp of a 108dp canvas.
+    Design centered at (54,54).
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- White glove / hand shape -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="
+          M54,18
+          L46,30 L40,30 L40,42
+          L34,42 L34,52
+          L40,52 L40,62
+          L68,62 L68,52
+          L74,52 L74,42
+          L68,42 L68,30
+          L62,30 Z" />
+
+    <!-- Left ice cube - light blue -->
+    <path
+        android:fillColor="#E3F2FD"
+        android:pathData="
+          M30,68 L46,62 L54,70
+          L54,86 L38,92 L30,84 Z" />
+
+    <!-- Right ice cube - slightly deeper blue -->
+    <path
+        android:fillColor="#BBDEFB"
+        android:pathData="
+          M54,70 L62,62 L78,68
+          L78,84 L70,92 L54,86 Z" />
+
+    <!-- Gold star top-left -->
+    <path
+        android:fillColor="#FFD54F"
+        android:pathData="
+          M22,22 L24,29 L31,29
+          L25,33 L27,40
+          L22,36 L17,40
+          L19,33 L13,29
+          L20,29 Z" />
+
+    <!-- Gold star top-right -->
+    <path
+        android:fillColor="#FFD54F"
+        android:pathData="
+          M86,22 L88,29 L95,29
+          L89,33 L91,40
+          L86,36 L81,40
+          L83,33 L77,29
+          L84,29 Z" />
+
+</vector>

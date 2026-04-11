@@ -1,0 +1,33 @@
+# Gradle files
+.gradle/
+build/
+/*/build/
+
+# IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Android Studio local configuration
+local.properties
+
+# Signing files
+*.jks
+*.keystore
+
+# External native build
+.externalNativeBuild/
+.cxx/
+
+# Log files
+*.log
+
+# Captures
+/captures/
+
+# OS files
+.DS_Store
+
+# APKs
+*.apk
