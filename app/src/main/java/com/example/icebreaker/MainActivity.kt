@@ -184,6 +184,10 @@ fun MainAppContent(
                         },
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                     )
+                    // Divider between GIST and FUNCTIONS
+                    if (screen == Screen.GIST) {
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                    }
                 }
 
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
