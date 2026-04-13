@@ -61,6 +61,14 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@androidx.compose.ui.tooling.preview.Preview(showBackground = true)
+@Composable
+fun SplashScreenPreview() {
+    IcebreakerTheme(darkTheme = true) {
+        SplashScreen(onTimeout = {})
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IcebreakerApp(
@@ -127,7 +135,7 @@ fun SplashScreen(onTimeout: () -> Unit) {
             )
         }
         Text(
-            text = "from SethSBrown",
+            text = "from PaperMacheKen",
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 64.dp),
