@@ -1,17 +1,24 @@
 package com.example.icebreaker
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,6 +29,7 @@ import com.example.icebreaker.ui.GistOfTheGameScreen
 import com.example.icebreaker.ui.InputScreen
 import com.example.icebreaker.ui.theme.IcebreakerTheme
 import com.example.icebreaker.viewmodel.IcebreakerViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 // ─── Navigation targets ───────────────────────────────────────────────────────
@@ -29,7 +37,7 @@ enum class Screen(val label: String) {
     INPUT("Input Mode"),
     GAME("Game Mode"),
     GIST("Gist of the Game"),
-    FUNCTIONS("App Functions"),
+    FUNCTIONS("App How-To"),
     ABOUT("App Info")
 }
 
@@ -60,12 +68,90 @@ fun IcebreakerApp(
     darkTheme: Boolean,
     onThemeChange: (Boolean) -> Unit
 ) {
+    var showSplash by remember { mutableStateOf(true) }
+
+    AnimatedContent(
+        targetState = showSplash,
+        transitionSpec = {
+            fadeIn(animationSpec = tween(1000)) togetherWith fadeOut(animationSpec = tween(1000))
+        },
+        label = "SplashTransition"
+    ) { splashActive ->
+        if (splashActive) {
+            // Splash screen is always dark themed
+            IcebreakerTheme(darkTheme = true, dynamicColor = false) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    SplashScreen(onTimeout = { showSplash = false })
+                }
+            }
+        } else {
+            MainAppContent(
+                viewModel = viewModel,
+                darkTheme = darkTheme,
+                onThemeChange = onThemeChange
+            )
+        }
+    }
+}
+
+@Composable
+fun SplashScreen(onTimeout: () -> Unit) {
+    LaunchedEffect(Unit) {
+        delay(2000)
+        onTimeout()
+    }
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_icebreaker_logo),
+                contentDescription = "Icebreaker Logo",
+                modifier = Modifier.size(180.dp)
+            )
+            Spacer(Modifier.height(32.dp))
+            @Suppress("MagicNumber")
+            Text(
+                text = "Icebreaker",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF1976D2)
+            )
+        }
+        Text(
+            text = "from SethSBrown",
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 64.dp),
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainAppContent(
+    viewModel: IcebreakerViewModel,
+    darkTheme: Boolean,
+    onThemeChange: (Boolean) -> Unit
+) {
     var currentScreen by remember { mutableStateOf(Screen.INPUT) }
     val drawerState   = rememberDrawerState(DrawerValue.Closed)
     val scope         = rememberCoroutineScope()
+    val context       = LocalContext.current
 
     // Confirmation dialog flags
     var showClearDbDialog          by remember { mutableStateOf(false) }
+    var showCloseAppDialog         by remember { mutableStateOf(false) }
 
     ModalNavigationDrawer(
         drawerState   = drawerState,
@@ -104,6 +190,19 @@ fun IcebreakerApp(
                         )
                     },
                     modifier = Modifier.padding(horizontal = 16.dp)
+                )
+
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+                // Close App Item
+                NavigationDrawerItem(
+                    label = { Text("Close App", color = MaterialTheme.colorScheme.error) },
+                    selected = false,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        showCloseAppDialog = true
+                    },
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
             }
         }
@@ -179,6 +278,32 @@ fun IcebreakerApp(
             },
             dismissButton = {
                 TextButton(onClick = { showClearDbDialog = false }) { Text("Cancel") }
+            }
+        )
+    }
+
+    // ── Close App confirmation ───────────────────────────────────────────────
+    if (showCloseAppDialog) {
+        AlertDialog(
+            onDismissRequest = { showCloseAppDialog = false },
+            title = { Text("Close App") },
+            text  = {
+                Text(
+                    "The app will close and ALL data will be deleted from the database. " +
+                    "This action cannot be undone."
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.clearAllData()
+                    showCloseAppDialog = false
+                    (context as? Activity)?.finish()
+                }) {
+                    Text("Close and Delete", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showCloseAppDialog = false }) { Text("Cancel") }
             }
         )
     }
