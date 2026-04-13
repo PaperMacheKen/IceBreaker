@@ -30,7 +30,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.icebreakerpmken"
+        applicationId = "com.icebreakerkink"
         minSdk = 24
         targetSdk = 36
         versionCode = 4
