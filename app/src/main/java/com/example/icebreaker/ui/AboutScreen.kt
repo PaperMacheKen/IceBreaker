@@ -58,15 +58,28 @@ fun AboutScreen() {
 
         Spacer(Modifier.height(16.dp))
 
-        // ── Link ──────────────────────────────────────────────────────────
+        // ── Links ──────────────────────────────────────────────────────────
         Text(
-            text           = "fetlife.com/PaperMacheKen",
+            text           = "Fetlife",
             fontSize       = 16.sp,
             textAlign      = TextAlign.Center,
             color          = Color(0xFF1976D2),
             textDecoration = TextDecoration.Underline,
             modifier       = Modifier.clickable {
                 uriHandler.openUri("https://fetlife.com/PaperMacheKen")
+            }
+        )
+
+        Spacer(Modifier.height(8.dp))
+
+        Text(
+            text           = "Project Github",
+            fontSize       = 16.sp,
+            textAlign      = TextAlign.Center,
+            color          = Color(0xFF1976D2),
+            textDecoration = TextDecoration.Underline,
+            modifier       = Modifier.clickable {
+                uriHandler.openUri("https://github.com/PaperMacheKen/IceBreaker")
             }
         )
     }
