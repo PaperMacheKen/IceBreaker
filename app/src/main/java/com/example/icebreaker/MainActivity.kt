@@ -206,6 +206,17 @@ fun MainAppContent(
 
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
+                // Clear Database Item
+                NavigationDrawerItem(
+                    label = { Text("Clear Database", color = MaterialTheme.colorScheme.error) },
+                    selected = false,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        showClearDbDialog = true
+                    },
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                )
+
                 // Close App Item
                 NavigationDrawerItem(
                     label = { Text("Close App", color = MaterialTheme.colorScheme.error) },
@@ -231,20 +242,6 @@ fun MainAppContent(
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
                             Icon(Icons.Default.Menu, contentDescription = "Menu")
-                        }
-                    },
-                    actions = {
-                        // "Clear Database"
-                        TextButton(
-                            onClick = { showClearDbDialog = true },
-                            contentPadding = PaddingValues(horizontal = 4.dp)
-                        ) {
-                            Text(
-                                "Clear\nDB",
-                                fontSize   = 9.sp,
-                                lineHeight = 11.sp,
-                                color      = MaterialTheme.colorScheme.error
-                            )
                         }
                     }
                 )
