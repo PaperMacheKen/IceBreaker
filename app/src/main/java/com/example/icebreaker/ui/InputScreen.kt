@@ -19,40 +19,50 @@ import androidx.compose.ui.unit.sp
 import com.example.icebreaker.data.Person
 import com.example.icebreaker.viewmodel.IcebreakerViewModel
 
-// ─── Colour scheme ───────────────────────────────────────────────────────────
-private val TopColor       = Color(0xFF1976D2)   // blue
-private val BottomColor    = Color(0xFF388E3C)   // green
-private val UsedTextColor  = Color(0xFFAAAAAA)
+/**
+ * Visual styling constants for the participant lists.
+ */
+private val TopColor       = Color(0xFF1976D2)   // Branding Blue for Tops
+private val BottomColor    = Color(0xFF388E3C)   // Branding Green for Bottoms
+private val UsedTextColor  = Color(0xFFAAAAAA)   // Muted grey for used participants
 
-// ─── Enum for the context-menu action ────────────────────────────────────────
+/**
+ * Identifier used to distinguish between the two participant lists in logic.
+ */
 private enum class ListType { TOP, BOTTOM }
 
+/**
+ * The Input Screen allows users to manage the lists of "Tops" and "Bottoms".
+ * Features name entry, list visualization, and editing/removal of entries.
+ */
 @Composable
 fun InputScreen(
     viewModel: IcebreakerViewModel,
     onSwitchToGame: () -> Unit
 ) {
+    // Collect lists from the ViewModel as Compose state
     val tops    by viewModel.tops.collectAsState()
     val bottoms by viewModel.bottoms.collectAsState()
 
-    // Input state
+    // ── Input State ───────────────────────────────────────────────────────
     var nameText    by remember { mutableStateOf("") }
     var addToTop    by remember { mutableStateOf(false) }
     var addToBottom by remember { mutableStateOf(false) }
     var showError   by remember { mutableStateOf(false) }
 
-    // Long-press context menu
+    // ── Dialog & Context Menu State ───────────────────────────────────────
+    // Controls the long-press options menu
     var contextPerson   by remember { mutableStateOf<Person?>(null) }
     var contextListType by remember { mutableStateOf(ListType.TOP) }
     var showContextMenu by remember { mutableStateOf(false) }
 
-    // Edit dialog
+    // Controls the name editing dialog
     var editingPerson   by remember { mutableStateOf<Person?>(null) }
     var editingListType by remember { mutableStateOf(ListType.TOP) }
     var editText        by remember { mutableStateOf("") }
     var showEditDialog  by remember { mutableStateOf(false) }
 
-    // Delete confirmation dialog
+    // Controls the deletion confirmation dialog
     var deletingPerson   by remember { mutableStateOf<Person?>(null) }
     var deletingListType by remember { mutableStateOf(ListType.TOP) }
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -63,7 +73,7 @@ fun InputScreen(
             .padding(horizontal = 12.dp, vertical = 8.dp)
     ) {
 
-        // ── Name input row ────────────────────────────────────────────────
+        // ── Section: Participant Name Entry ───────────────────────────────
         OutlinedTextField(
             value = nameText,
             onValueChange = { nameText = it; showError = false },
@@ -83,12 +93,13 @@ fun InputScreen(
 
         Spacer(Modifier.height(8.dp))
 
-        // ── Category toggles + Add button ────────────────────────────────
+        // ── Section: Category Selection & Add Button ─────────────────────
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
         ) {
+            // Toggle for adding the name to the Tops list
             FilterChip(
                 selected = addToTop,
                 onClick  = { addToTop = !addToTop; showError = false },
@@ -99,6 +110,7 @@ fun InputScreen(
                 )
             )
             Spacer(Modifier.width(8.dp))
+            // Toggle for adding the name to the Bottoms list
             FilterChip(
                 selected = addToBottom,
                 onClick  = { addToBottom = !addToBottom; showError = false },
@@ -109,6 +121,7 @@ fun InputScreen(
                 )
             )
             Spacer(Modifier.width(12.dp))
+            // Button to persist the entry to the database
             Button(
                 onClick = {
                     val trimmed = nameText.trim()
@@ -130,7 +143,7 @@ fun InputScreen(
 
         Spacer(Modifier.height(12.dp))
 
-        // ── Two-column list headers ───────────────────────────────────────
+        // ── Section: List Headers ──────────────────────────────────────────
         Row(Modifier.fillMaxWidth()) {
             Text(
                 "Tops (${tops.size})",
@@ -150,13 +163,13 @@ fun InputScreen(
 
         HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
 
-        // ── Side-by-side scrollable lists ─────────────────────────────────
+        // ── Section: Parallel Participant Lists ───────────────────────────
         Row(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
         ) {
-            // Tops list
+            // Scrollable list of Tops
             LazyColumn(
                 modifier = Modifier
                     .weight(1f)
@@ -178,7 +191,7 @@ fun InputScreen(
 
             VerticalDivider(modifier = Modifier.fillMaxHeight())
 
-            // Bottoms list
+            // Scrollable list of Bottoms
             LazyColumn(
                 modifier = Modifier
                     .weight(1f)
@@ -201,7 +214,7 @@ fun InputScreen(
 
         Spacer(Modifier.height(8.dp))
 
-        // ── Switch to Game Mode ───────────────────────────────────────────
+        // ── Navigation: Switch to Game Mode ──────────────────────────────
         Button(
             onClick   = onSwitchToGame,
             modifier  = Modifier.fillMaxWidth(),
@@ -213,13 +226,14 @@ fun InputScreen(
         }
     }
 
-    // ── Long-press context menu ───────────────────────────────────────────
+    // ── Interaction: Long-press context menu ──────────────────────────────
     if (showContextMenu && contextPerson != null) {
         AlertDialog(
             onDismissRequest = { showContextMenu = false },
             title = { Text(contextPerson!!.name) },
             text  = { Text("What would you like to do?") },
             confirmButton = {
+                // Initiates name editing
                 TextButton(onClick = {
                     editingPerson   = contextPerson
                     editingListType = contextListType
@@ -229,6 +243,7 @@ fun InputScreen(
                 }) { Text("Edit") }
             },
             dismissButton = {
+                // Initiates record deletion
                 TextButton(onClick = {
                     deletingPerson   = contextPerson
                     deletingListType = contextListType
@@ -239,7 +254,7 @@ fun InputScreen(
         )
     }
 
-    // ── Edit dialog ───────────────────────────────────────────────────────
+    // ── Interaction: Edit dialog ─────────────────────────────────────────
     if (showEditDialog && editingPerson != null) {
         AlertDialog(
             onDismissRequest = { showEditDialog = false },
@@ -270,7 +285,7 @@ fun InputScreen(
         )
     }
 
-    // ── Delete confirmation dialog ────────────────────────────────────────
+    // ── Interaction: Delete confirmation dialog ──────────────────────────
     if (showDeleteDialog && deletingPerson != null) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
@@ -295,7 +310,11 @@ fun InputScreen(
     }
 }
 
-// ── Single person row ─────────────────────────────────────────────────────────
+/**
+ * Renders a single row representing a participant.
+ * Displays their name and a status indicator (dot).
+ * Long-pressing triggers management options.
+ */
 @Composable
 private fun PersonListItem(
     person: Person,
@@ -307,10 +326,12 @@ private fun PersonListItem(
         modifier = Modifier
             .fillMaxWidth()
             .pointerInput(person.id) {
+                // Detects a long press gesture to open the context menu
                 detectTapGestures(onLongPress = { onLongPress() })
             }
             .padding(vertical = 6.dp, horizontal = 4.dp)
     ) {
+        // Status indicator dot (coloured if available, grey if used)
         Box(
             modifier = Modifier
                 .size(8.dp)
@@ -320,6 +341,7 @@ private fun PersonListItem(
                 )
         )
         Spacer(Modifier.width(8.dp))
+        // Participant name (strikethrough and muted if used)
         Text(
             text            = person.name,
             color           = if (person.used) UsedTextColor else Color.Unspecified,

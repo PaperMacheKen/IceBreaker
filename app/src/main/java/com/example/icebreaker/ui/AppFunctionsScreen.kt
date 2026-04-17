@@ -10,6 +10,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * Composable screen providing a quick-start guide on how to use the app's features.
+ */
 @Composable
 fun AppFunctionsScreen() {
     Column(
@@ -18,6 +21,7 @@ fun AppFunctionsScreen() {
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
+        // ── Header: Functionality Overview ───────────────────────────────
         Text(
             text = "App functions - How to:",
             fontWeight = FontWeight.Bold,
@@ -25,6 +29,7 @@ fun AppFunctionsScreen() {
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
+        // ── Feature Breakdown ─────────────────────────────────────────────
         BulletPoint("Go to Input Mode to add names to the Tops and Bottoms lists.")
         BulletPoint("Switch to Game Mode to start pairing.")
         BulletPoint("Tap 'Random Top' and 'Random Bottom' to get a pair.")
@@ -34,6 +39,9 @@ fun AppFunctionsScreen() {
     }
 }
 
+/**
+ * Helper component for displaying a bulleted list item.
+ */
 @Composable
 private fun BulletPoint(text: String) {
     Row(modifier = Modifier.padding(bottom = 8.dp)) {
