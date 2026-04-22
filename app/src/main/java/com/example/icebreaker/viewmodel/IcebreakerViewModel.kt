@@ -3,6 +3,7 @@ package com.example.icebreaker.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.icebreaker.BuildConfig
 import com.example.icebreaker.data.DatabaseHelper
 import com.example.icebreaker.data.Person
 import kotlinx.coroutines.Dispatchers
@@ -11,6 +12,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.net.HttpURLConnection
+import java.net.URL
 
 /**
  * ViewModel responsible for managing the state and logic of the Icebreaker app.
