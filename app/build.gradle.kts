@@ -30,11 +30,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.icebreakerpmken"
+        applicationId = "com.icebreakerkink"
         minSdk = 24
         targetSdk = 36
-        versionCode = 4
-        versionName = "4"
+        versionCode = 5
+        versionName = "5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

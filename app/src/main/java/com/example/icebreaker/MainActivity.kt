@@ -34,7 +34,10 @@ import com.example.icebreaker.viewmodel.IcebreakerViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-// ─── Navigation targets ───────────────────────────────────────────────────────
+/**
+ * Enumeration of the different screens available in the application.
+ * Each entry includes a user-friendly label for display in navigation components.
+ */
 enum class Screen(val label: String) {
     INPUT("Input Mode"),
     GAME("Game Mode"),
@@ -43,15 +46,24 @@ enum class Screen(val label: String) {
     ABOUT("App Info")
 }
 
+/**
+ * The main entry point of the application.
+ * Sets up the ViewModel, edge-to-edge display, and the root Composable.
+ */
 class MainActivity : ComponentActivity() {
 
+    // ViewModel instance scoped to this Activity, handles application logic and data
     private val viewModel: IcebreakerViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Enables full-screen content that flows under system bars
         enableEdgeToEdge()
         setContent {
+            // State for toggling between dark and light themes
             var darkTheme by remember { mutableStateOf(true) }
+            
+            // Root theme wrapper for the application
             IcebreakerTheme(darkTheme = darkTheme) {
                 IcebreakerApp(
                     viewModel = viewModel,
@@ -63,6 +75,9 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/**
+ * Preview Composable for the Splash Screen.
+ */
 @androidx.compose.ui.tooling.preview.Preview(showBackground = true)
 @Composable
 fun SplashScreenPreview() {
@@ -71,6 +86,9 @@ fun SplashScreenPreview() {
     }
 }
 
+/**
+ * Top-level Composable that manages the transition between the Splash Screen and Main Content.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IcebreakerApp(
@@ -78,8 +96,10 @@ fun IcebreakerApp(
     darkTheme: Boolean,
     onThemeChange: (Boolean) -> Unit
 ) {
+    // Controls visibility of the splash screen
     var showSplash by remember { mutableStateOf(true) }
 
+    // Smooth fade transition between Splash and Main Content
     AnimatedContent(
         targetState = showSplash,
         transitionSpec = {
@@ -88,7 +108,7 @@ fun IcebreakerApp(
         label = "SplashTransition"
     ) { splashActive ->
         if (splashActive) {
-            // Splash screen is always dark themed
+            // Splash screen uses a fixed dark theme for branding consistency
             IcebreakerTheme(darkTheme = true, dynamicColor = false) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -98,6 +118,7 @@ fun IcebreakerApp(
                 }
             }
         } else {
+            // Primary application shell once splash is complete
             MainAppContent(
                 viewModel = viewModel,
                 darkTheme = darkTheme,
@@ -107,8 +128,13 @@ fun IcebreakerApp(
     }
 }
 
+/**
+ * Displays branding information temporarily when the app starts.
+ * @param onTimeout Callback triggered when the splash duration ends.
+ */
 @Composable
 fun SplashScreen(onTimeout: () -> Unit) {
+    // Delays for 2 seconds before proceeding to main content
     LaunchedEffect(Unit) {
         delay(2000)
         onTimeout()
@@ -122,12 +148,14 @@ fun SplashScreen(onTimeout: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            // Branding logo
             Image(
                 painter = painterResource(id = R.drawable.ic_icebreaker_logo),
                 contentDescription = "Icebreaker Logo",
                 modifier = Modifier.size(180.dp)
             )
             Spacer(Modifier.height(32.dp))
+            // App name with specific blue branding color
             @Suppress("MagicNumber")
             Text(
                 text = "Icebreaker",
@@ -136,6 +164,7 @@ fun SplashScreen(onTimeout: () -> Unit) {
                 color = Color(0xFF1976D2)
             )
         }
+        // Footer credit
         Text(
             text = "from PaperMacheKen",
             modifier = Modifier
@@ -147,6 +176,9 @@ fun SplashScreen(onTimeout: () -> Unit) {
     }
 }
 
+/**
+ * The main container for the application, featuring a navigation drawer and scaffold.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainAppContent(
@@ -154,20 +186,23 @@ fun MainAppContent(
     darkTheme: Boolean,
     onThemeChange: (Boolean) -> Unit
 ) {
+    // Navigation and UI state management
     var currentScreen by remember { mutableStateOf(Screen.INPUT) }
     val drawerState   = rememberDrawerState(DrawerValue.Closed)
     val scope         = rememberCoroutineScope()
     val context       = LocalContext.current
 
-    // Confirmation dialog flags
+    // Visibility flags for confirmation dialogs
     var showClearDbDialog          by remember { mutableStateOf(false) }
     var showCloseAppDialog         by remember { mutableStateOf(false) }
 
+    // Side-navigation drawer container
     ModalNavigationDrawer(
         drawerState   = drawerState,
         drawerContent = {
             ModalDrawerSheet {
                 Spacer(Modifier.height(16.dp))
+                // Drawer Header
                 Text(
                     "Icebreaker",
                     style    = MaterialTheme.typography.headlineSmall,
@@ -176,6 +211,7 @@ fun MainAppContent(
                 )
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
+                // Dynamically generate navigation items from Screen enum
                 Screen.entries.forEach { screen ->
                     NavigationDrawerItem(
                         label    = { Text(screen.label) },
@@ -186,7 +222,7 @@ fun MainAppContent(
                         },
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                     )
-                    // Divider between GIST and FUNCTIONS
+                    // Visual separation between core game and info screens
                     if (screen == Screen.GIST) {
                         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                     }
@@ -194,7 +230,8 @@ fun MainAppContent(
 
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
-                // Theme Toggle in Drawer
+                // ── Settings ──────────────────────────────────────────────────
+                // Dark mode toggle within the drawer
                 ListItem(
                     headlineContent = { Text("Dark Mode") },
                     trailingContent = {
@@ -208,7 +245,19 @@ fun MainAppContent(
 
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
-                // Close App Item
+                // ── Critical Actions ──────────────────────────────────────────
+                // Option to wipe all user-entered names
+                NavigationDrawerItem(
+                    label = { Text("Clear Database", color = MaterialTheme.colorScheme.error) },
+                    selected = false,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        showClearDbDialog = true
+                    },
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                )
+
+                // Option to exit the app and wipe data (for privacy)
                 NavigationDrawerItem(
                     label = { Text("Close App", color = MaterialTheme.colorScheme.error) },
                     selected = false,
@@ -254,6 +303,7 @@ fun MainAppContent(
             }
         }
     ) {
+        // Main scaffold with TopAppBar and content area
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -264,27 +314,15 @@ fun MainAppContent(
                         )
                     },
                     navigationIcon = {
+                        // Menu button to open the navigation drawer
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
                             Icon(Icons.Default.Menu, contentDescription = "Menu")
-                        }
-                    },
-                    actions = {
-                        // "Clear Database"
-                        TextButton(
-                            onClick = { showClearDbDialog = true },
-                            contentPadding = PaddingValues(horizontal = 4.dp)
-                        ) {
-                            Text(
-                                "Clear\nDB",
-                                fontSize   = 9.sp,
-                                lineHeight = 11.sp,
-                                color      = MaterialTheme.colorScheme.error
-                            )
                         }
                     }
                 )
             }
         ) { innerPadding ->
+            // Content area where the selected screen is rendered
             Box(modifier = Modifier.padding(innerPadding)) {
                 when (currentScreen) {
                     Screen.INPUT -> InputScreen(
@@ -303,7 +341,7 @@ fun MainAppContent(
         }
     }
 
-    // ── Clear Database confirmation ───────────────────────────────────────────
+    // ── Confirmation Dialog: Clear Database ───────────────────────────────────
     if (showClearDbDialog) {
         AlertDialog(
             onDismissRequest = { showClearDbDialog = false },
@@ -329,7 +367,7 @@ fun MainAppContent(
         )
     }
 
-    // ── Close App confirmation ───────────────────────────────────────────────
+    // ── Confirmation Dialog: Close App ────────────────────────────────────────
     if (showCloseAppDialog) {
         AlertDialog(
             onDismissRequest = { showCloseAppDialog = false },

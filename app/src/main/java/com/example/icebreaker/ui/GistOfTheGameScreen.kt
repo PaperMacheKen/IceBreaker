@@ -10,6 +10,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * Composable screen that explains the rules and flow of the Icebreaker game.
+ * Uses a scrollable column to accommodate the detailed textual content.
+ */
 @Composable
 fun GistOfTheGameScreen() {
     Column(
@@ -18,6 +22,7 @@ fun GistOfTheGameScreen() {
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
+        // ── Header: General Concept ───────────────────────────────────────
         Text(
             text = "How to: ",
             fontSize = 24.sp,
@@ -31,6 +36,7 @@ fun GistOfTheGameScreen() {
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
+        // ── Rules: Safety and Gameplay ────────────────────────────────────
         Text(
             text = "What happens in the icebreaker game: ",
             fontSize = 16.sp,
@@ -44,6 +50,7 @@ fun GistOfTheGameScreen() {
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
+        // ── Gameplay Flow ──────────────────────────────────────────────────
         Text(
             text = "A bottom’s name will be randomly selected and called to come forward.\nA Tops name is randomly selected\nThe bottom decides if they are comfortable playing with the Top.\nIf the bottom does not consent, another Top will be randomly selected.",
             fontSize = 16.sp,
@@ -56,12 +63,14 @@ fun GistOfTheGameScreen() {
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
+        // ── Logistics: Ratio & Pacing ──────────────────────────────────────
         Text(
             text = "The ratio of Tops vs Bottoms can vary, so it may take longer to get thru all the names of one category while the other category is called a second time.",
             fontSize = 16.sp,
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
+        // ── Equipment Information ──────────────────────────────────────────
         Text(
             text = "Types of toys: ",
             fontSize = 16.sp,

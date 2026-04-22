@@ -17,10 +17,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.icebreaker.R
 
+/**
+ * Composable that displays the "About" screen, featuring the app logo,
+ * name, developer credits, and external project links.
+ */
 @Composable
 fun AboutScreen() {
+    // Provides access to open URIs in the system's default browser
     val uriHandler = LocalUriHandler.current
 
+    // Root layout container: a full-screen Column with centered content
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -28,8 +34,8 @@ fun AboutScreen() {
             .fillMaxSize()
             .padding(32.dp)
     ) {
-        // ── Logo ──────────────────────────────────────────────────────────
-        // Replace ic_icebreaker_logo with your actual image drawable if needed
+        // ── App Logo ──────────────────────────────────────────────────────
+        // Displays the application's branding image
         Image(
             painter            = painterResource(id = R.drawable.ic_icebreaker_logo),
             contentDescription = "Icebreaker Logo",
@@ -38,7 +44,8 @@ fun AboutScreen() {
 
         Spacer(Modifier.height(32.dp))
 
-        // ── App name ─────────────────────────────────────────────────────
+        // ── Application Name ──────────────────────────────────────────────
+        // Large bold text for the app title
         Text(
             text       = "Icebreaker",
             fontSize   = 32.sp,
@@ -49,7 +56,8 @@ fun AboutScreen() {
 
         Spacer(Modifier.height(16.dp))
 
-        // ── Credit ────────────────────────────────────────────────────────
+        // ── Developer Credits ─────────────────────────────────────────────
+        // Attribution to the creator
         Text(
             text      = "From: PaperMacheKen",
             fontSize  = 18.sp,
@@ -58,7 +66,9 @@ fun AboutScreen() {
 
         Spacer(Modifier.height(16.dp))
 
-        // ── Links ──────────────────────────────────────────────────────────
+        // ── External Links ────────────────────────────────────────────────
+        
+        // Clickable link to the developer's Fetlife profile
         Text(
             text           = "Fetlife",
             fontSize       = 16.sp,
@@ -72,6 +82,7 @@ fun AboutScreen() {
 
         Spacer(Modifier.height(8.dp))
 
+        // Clickable link to the Project's GitHub repository
         Text(
             text           = "Project Github",
             fontSize       = 16.sp,
