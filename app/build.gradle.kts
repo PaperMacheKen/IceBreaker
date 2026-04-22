@@ -33,8 +33,8 @@ android {
         applicationId = "com.icebreakerkink"
         minSdk = 24
         targetSdk = 36
-        versionCode = 5
-        versionName = "5"
+        versionCode = 7
+        versionName = "4.5.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

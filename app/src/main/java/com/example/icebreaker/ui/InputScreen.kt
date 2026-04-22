@@ -141,6 +141,16 @@ fun InputScreen(
             }
         }
 
+        Text(
+            text = "Push and hold to edit names.",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+        )
+
         Spacer(Modifier.height(12.dp))
 
         // ── Section: List Headers ──────────────────────────────────────────
