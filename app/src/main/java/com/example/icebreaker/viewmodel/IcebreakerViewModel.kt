@@ -37,6 +37,12 @@ class IcebreakerViewModel(application: Application) : AndroidViewModel(applicati
     // Public read-only state flow observed by the UI
     val bottoms: StateFlow<List<Person>> = _bottoms.asStateFlow()
 
+    // ── Update Check ─────────────────────────────────────────────────────
+    private val _isUpdateAvailable = MutableStateFlow(false)
+    val isUpdateAvailable: StateFlow<Boolean> = _isUpdateAvailable.asStateFlow()
+
+    val currentVersion: String = BuildConfig.VERSION_NAME
+
     // ── Active Game Selections ───────────────────────────────────────────
     
     // The currently selected participant from the Tops list
@@ -48,7 +54,32 @@ class IcebreakerViewModel(application: Application) : AndroidViewModel(applicati
     val selectedBottom: StateFlow<Person?> = _selectedBottom.asStateFlow()
 
     // Load initial data from database on initialization
-    init { refresh() }
+    init {
+        refresh()
+        checkForUpdates()
+    }
+
+    private fun checkForUpdates() = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            val url = URL("https://api.github.com/repos/PaperMacheKen/IceBreaker/releases/latest")
+            val connection = url.openConnection() as HttpURLConnection
+            connection.requestMethod = "GET"
+            connection.setRequestProperty("Accept", "application/vnd.github.v3+json")
+
+            if (connection.responseCode == HttpURLConnection.HTTP_OK) {
+                val response = connection.inputStream.bufferedReader().use { it.readText() }
+                val json = JSONObject(response)
+                val latestTag = json.getString("tag_name").removePrefix("v")
+
+                // Simple version comparison
+                if (latestTag != currentVersion) {
+                    _isUpdateAvailable.value = true
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     // ─────────────────────── Input Mode Operations ───────────────────────
 
