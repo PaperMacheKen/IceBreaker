@@ -1,6 +1,8 @@
 package com.example.icebreaker
 
 import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -216,6 +218,39 @@ fun MainAppContent(
                     },
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
+
+                Spacer(Modifier.weight(1f))
+
+                // App Version and Update Notification
+                val isUpdateAvailable by viewModel.isUpdateAvailable.collectAsState()
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://github.com/PaperMacheKen/IceBreaker/releases")
+                            )
+                            context.startActivity(intent)
+                        }
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    if (isUpdateAvailable) {
+                        Text(
+                            text = "New release available",
+                            color = Color(0xFF00E676), // Bright Green
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(Modifier.height(4.dp))
+                    }
+                    Text(
+                        text = "Version ${viewModel.currentVersion}",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                    )
+                }
             }
         }
     ) {

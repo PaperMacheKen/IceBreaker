@@ -3,6 +3,7 @@ package com.example.icebreaker.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.icebreaker.BuildConfig
 import com.example.icebreaker.data.DatabaseHelper
 import com.example.icebreaker.data.Person
 import kotlinx.coroutines.Dispatchers
@@ -11,6 +12,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.net.HttpURLConnection
+import java.net.URL
 
 class IcebreakerViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -23,6 +27,12 @@ class IcebreakerViewModel(application: Application) : AndroidViewModel(applicati
     private val _bottoms = MutableStateFlow<List<Person>>(emptyList())
     val bottoms: StateFlow<List<Person>> = _bottoms.asStateFlow()
 
+    // ── Update check ───────────────────────────────────────────────────────
+    private val _isUpdateAvailable = MutableStateFlow(false)
+    val isUpdateAvailable: StateFlow<Boolean> = _isUpdateAvailable.asStateFlow()
+
+    val currentVersion: String = BuildConfig.VERSION_NAME
+
     // ── Game mode selections ───────────────────────────────────────────────
     private val _selectedTop    = MutableStateFlow<Person?>(null)
     val selectedTop: StateFlow<Person?> = _selectedTop.asStateFlow()
@@ -30,7 +40,32 @@ class IcebreakerViewModel(application: Application) : AndroidViewModel(applicati
     private val _selectedBottom = MutableStateFlow<Person?>(null)
     val selectedBottom: StateFlow<Person?> = _selectedBottom.asStateFlow()
 
-    init { refresh() }
+    init {
+        refresh()
+        checkForUpdates()
+    }
+
+    private fun checkForUpdates() = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            val url = URL("https://api.github.com/repos/PaperMacheKen/IceBreaker/releases/latest")
+            val connection = url.openConnection() as HttpURLConnection
+            connection.requestMethod = "GET"
+            connection.setRequestProperty("Accept", "application/vnd.github.v3+json")
+
+            if (connection.responseCode == HttpURLConnection.HTTP_OK) {
+                val response = connection.inputStream.bufferedReader().use { it.readText() }
+                val json = JSONObject(response)
+                val latestTag = json.getString("tag_name").removePrefix("v")
+
+                // Simple version comparison (e.g., "1.0.1" vs "1.0.0")
+                if (latestTag != currentVersion) {
+                    _isUpdateAvailable.value = true
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     // ─────────────────────── Input Mode ──────────────────────────────────
     fun addTop(name: String) = viewModelScope.launch(Dispatchers.IO) {
